@@ -11,9 +11,9 @@ const courseSchema = new mongoose.Schema({
     date: {type: Date, default: Date.now},
     isPublished: Boolean
 });
+const Course = mongoose.model('Course', courseSchema); //Class
 
 async function createCourse(){
-    const Course = mongoose.model('Course', courseSchema); //Class
     const course = new Course({
         name: 'Angular course',
         author: 'Mosh',
@@ -25,5 +25,15 @@ async function createCourse(){
     console.log(result)
 }
 
-createCourse();
+// createCourse();
 
+async function getCourses(){
+    const courses = await Course
+    .find({author: 'Mosh'})
+    .limit(2)
+    .sort({name: 1})
+    .select({ name: 1, tags: 1 });
+    console.log(courses)
+}
+
+getCourses()
