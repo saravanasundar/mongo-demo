@@ -15,10 +15,10 @@ const Course = mongoose.model('Course', courseSchema); //Class
 
 async function createCourse(){
     const course = new Course({
-        name: 'Angular course',
-        author: 'Mosh',
-        tags: ['Angular', 'Frontend'],
-        isPublished: true
+        name: 'Node js course',
+        author: 'Mosh Hamedani',
+        tags: ['Node', 'Backend'],
+        isPublished: false
     });
 
     const result = await course.save();
@@ -29,10 +29,19 @@ async function createCourse(){
 
 async function getCourses(){
     const courses = await Course
-    .find({author: 'Mosh'})
+    // .find() //{author: {$in: ['Mosh']}}
+    // .or({author: 'Mosh'}, {isPublished: false})
+    //author starts with mosh
+    .find({author: /^mosh/i})
+
+    //author ends with Hamedani
+    // .find({author: /hamedani$/i}) //i indicates no casesensitive
+
+    //Contains
+    .find({author: /.*Mosh.*/i})
     .limit(2)
     .sort({name: 1})
-    .select({ name: 1, tags: 1 });
+    .select({ name: 1, tags: 1, author: 1 });
     console.log(courses)
 }
 
