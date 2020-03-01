@@ -8,7 +8,13 @@ const courseSchema = new mongoose.Schema({
     name: {type: String, required: true, minlength: 5, maxlength: 20},
     category: {type: String, enum: ['web', 'mobile', 'network'], required: true}, 
     author: String,
-    tags: [String],
+    // tags: [String],
+    tags: {type: Array, validate:{
+        validator: function(v){
+            return v && v.length > 0;
+        },
+        message: 'A course should have atleast one tag'
+    }},
     date: {type: Date, default: Date.now},
     isPublished: Boolean,
     price: {type: Number, required: function(){return this.isPublished;}, min: 10, max: 200} //price required if the ispublished is true
@@ -18,7 +24,7 @@ const Course = mongoose.model('Course', courseSchema); //Class
 async function createCourse(){
     const course = new Course({
         name: 'Node js course',
-        category: '-',
+        category: 'web',
         author: 'Mosh Hamedani',
         tags: ['Node', 'Backend'],
         isPublished: true,
